@@ -8,7 +8,7 @@ export interface TlaExportModalProps {
 }
 
 export function TlaExportModal({ spec, onClose }: TlaExportModalProps) {
-  const [activeTab, setActiveTab] = useState<"tla" | "cfg">("tla");
+  const [activeTab, setActiveTab] = useState<"tla" | "cfg" | "json">("tla");
   const [copied, setCopied] = useState(false);
 
   const output = useMemo(() => {
@@ -22,11 +22,16 @@ export function TlaExportModal({ spec, onClose }: TlaExportModalProps) {
     }
   }, [spec]);
 
-  const content = output.ok
-    ? activeTab === "tla"
-      ? output.files.tlaFileContent
-      : output.files.cfgFileContent
-    : output.error;
+  const jsonContent = useMemo(() => JSON.stringify(spec, null, 2), [spec]);
+
+  const content =
+    activeTab === "json"
+      ? jsonContent
+      : output.ok
+        ? activeTab === "tla"
+          ? output.files.tlaFileContent
+          : output.files.cfgFileContent
+        : output.error;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(content);
@@ -75,9 +80,18 @@ export function TlaExportModal({ spec, onClose }: TlaExportModalProps) {
               >
                 {spec.moduleName}.cfg
               </button>
+              <button
+                type="button"
+                className={`tsmc-btn tsmc-btn-sm ${
+                  activeTab === "json" ? "tsmc-btn-primary" : ""
+                }`}
+                onClick={() => setActiveTab("json")}
+              >
+                {spec.moduleName}.json
+              </button>
             </div>
 
-            {output.ok && (
+            {(output.ok || activeTab === "json") && (
               <div style={{ display: "flex", gap: 6 }}>
                 <button
                   type="button"
@@ -94,7 +108,9 @@ export function TlaExportModal({ spec, onClose }: TlaExportModalProps) {
                     handleDownload(
                       activeTab === "tla"
                         ? `${spec.moduleName}.tla`
-                        : `${spec.moduleName}.cfg`,
+                        : activeTab === "cfg"
+                          ? `${spec.moduleName}.cfg`
+                          : `${spec.moduleName}.json`,
                       content
                     )
                   }
