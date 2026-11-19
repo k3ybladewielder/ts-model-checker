@@ -1,12 +1,12 @@
 # ts-model-checker
 
-A TLA+-style formal model checker in TypeScript with an eval-free AST evaluator, BFS state-space explorer, Tarjan SCC liveness checker, TLA+ transpiler, and a visual no-code React UI.
+A TLA+-style formal model checker in TypeScript with an eval-free AST evaluator, BFS state-space explorer, Tarjan SCC liveness checker, TLA+ & JSON import/export, and a visual no-code React UI.
 
 ![Template verification demo](./example.gif)
 
 ## Packages
 
-- `@ts-model-checker/core` — Pure formal engine (AST validator, evaluator, BFS model checker, liveness checker, trace validator, `.tla`/`.cfg` transpiler).
+- `@ts-model-checker/core` — Pure formal engine (AST validator, evaluator, BFS model checker, liveness checker, trace validator, `.tla`/`.cfg` & JSON import/export).
 - `@ts-model-checker/worker` — Web Worker wrapper with progress updates and `AbortSignal` support.
 - `@ts-model-checker/react` — Visual React Flow editor, structured expression builder, properties panel, and time-travel `TracePlayer`.
 
@@ -25,7 +25,7 @@ pnpm add @ts-model-checker/core @ts-model-checker/worker @ts-model-checker/react
 ### 1. Headless Verification (`@ts-model-checker/core`)
 
 ```ts
-import { verifySpec, transpileToTla, type VisualSpecIR } from "@ts-model-checker/core";
+import { verifySpec, transpileToTla, parseTlaToSpec, type VisualSpecIR } from "@ts-model-checker/core";
 
 const spec: VisualSpecIR = {
   schemaVersion: 1,
