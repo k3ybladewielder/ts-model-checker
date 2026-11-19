@@ -12,6 +12,11 @@ build/
 coverage/
 *.lcov
 
+# Local saved models & verification outputs (never commit)
+models/
+*.formal.json
+*.report.json
+
 # Logs
 logs/
 *.log
