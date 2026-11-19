@@ -3,10 +3,12 @@ name: Publish Packages to npm
 on:
   release:
     types: [published]
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Optional version override (e.g. 1.0.2). Leave empty to use package.json versions."
+        required: false
+        default: ""
 
 jobs:
   publish:
@@ -28,6 +30,27 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
+
+      - name: Sync package versions from release tag or input
+        run: |
+          RAW_VERSION="${{ github.event_name == 'release' && github.event.release.tag_name || inputs.version }}"
+          VERSION="${RAW_VERSION#v}"
+          if [ -n "$VERSION" ]; then
+            echo "Syncing package versions to $VERSION"
+            node -e '
+              const fs = require("fs");
+              const version = process.argv[1];
+              for (const pkgPath of [
+                "packages/core/package.json",
+                "packages/worker/package.json",
+                "packages/react/package.json",
+              ]) {
+                const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+                pkg.version = version;
+                fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+              }
+            ' "$VERSION"
+          fi
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
