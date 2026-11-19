@@ -1,0 +1,315 @@
+:root {
+  --tsmc-bg: #f8fafc;
+  --tsmc-surface: #ffffff;
+  --tsmc-surface-muted: #f1f5f9;
+  --tsmc-border: #cbd5e1;
+  --tsmc-text: #0f172a;
+  --tsmc-text-muted: #475569;
+  --tsmc-primary: #2563eb;
+  --tsmc-primary-soft: #dbeafe;
+  --tsmc-success: #16a34a;
+  --tsmc-success-soft: #dcfce7;
+  --tsmc-danger: #dc2626;
+  --tsmc-danger-soft: #fee2e2;
+  --tsmc-warning: #d97706;
+  --tsmc-warning-soft: #fef3c7;
+  --tsmc-radius: 10px;
+  --tsmc-font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --tsmc-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.tsmc-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  background: var(--tsmc-bg);
+  font-family: var(--tsmc-font);
+  color: var(--tsmc-text);
+  border: 1px solid var(--tsmc-border);
+  border-radius: var(--tsmc-radius);
+  overflow: hidden;
+}
+
+.tsmc-toolbar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: var(--tsmc-surface);
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--tsmc-border);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.tsmc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--tsmc-border);
+  background: var(--tsmc-surface);
+  color: var(--tsmc-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tsmc-btn:hover:not(:disabled) {
+  background: var(--tsmc-surface-muted);
+}
+
+.tsmc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tsmc-btn-primary {
+  background: var(--tsmc-primary);
+  border-color: var(--tsmc-primary);
+  color: #ffffff;
+}
+
+.tsmc-btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.tsmc-btn-danger {
+  background: var(--tsmc-danger-soft);
+  border-color: #fca5a5;
+  color: var(--tsmc-danger);
+}
+
+.tsmc-btn-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Custom Nodes */
+.tsmc-node {
+  min-width: 240px;
+  max-width: 300px;
+  background: var(--tsmc-surface);
+  border: 2px solid var(--tsmc-border);
+  border-radius: var(--tsmc-radius);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  font-family: var(--tsmc-font);
+  font-size: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tsmc-node-init {
+  border-color: #0ea5e9;
+}
+
+.tsmc-node-active {
+  border-color: var(--tsmc-warning);
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.25);
+}
+
+.tsmc-node-violated {
+  border-color: var(--tsmc-danger);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25);
+}
+
+.tsmc-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--tsmc-surface-muted);
+  border-bottom: 1px solid var(--tsmc-border);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.tsmc-node-init .tsmc-node-header {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.tsmc-node-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tsmc-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tsmc-text-muted);
+  margin-bottom: 2px;
+}
+
+.tsmc-code-chip {
+  font-family: var(--tsmc-mono);
+  font-size: 11px;
+  background: var(--tsmc-surface-muted);
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  word-break: break-word;
+}
+
+.tsmc-var-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--tsmc-mono);
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+/* Modal */
+.tsmc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.tsmc-modal {
+  background: var(--tsmc-surface);
+  color: var(--tsmc-text);
+  font-family: var(--tsmc-font);
+  border-radius: 12px;
+  border: 1px solid var(--tsmc-border);
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+}
+
+.tsmc-modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--tsmc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.tsmc-modal-body {
+  padding: 16px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tsmc-modal-footer {
+  padding: 12px 18px;
+  border-top: 1px solid var(--tsmc-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Form inputs & ExprBuilder */
+.tsmc-input,
+.tsmc-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--tsmc-border);
+  background: var(--tsmc-surface);
+  color: var(--tsmc-text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.tsmc-expr-box {
+  border: 1px solid var(--tsmc-border);
+  border-left: 3px solid var(--tsmc-primary);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tsmc-expr-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Panels */
+.tsmc-panel {
+  background: var(--tsmc-surface);
+  border: 1px solid var(--tsmc-border);
+  border-radius: var(--tsmc-radius);
+  padding: 14px;
+  font-family: var(--tsmc-font);
+  color: var(--tsmc-text);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tsmc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tsmc-badge-success {
+  background: var(--tsmc-success-soft);
+  color: var(--tsmc-success);
+}
+
+.tsmc-badge-danger {
+  background: var(--tsmc-danger-soft);
+  color: var(--tsmc-danger);
+}
+
+.tsmc-badge-warning {
+  background: var(--tsmc-warning-soft);
+  color: var(--tsmc-warning);
+}
+
+.tsmc-badge-info {
+  background: var(--tsmc-primary-soft);
+  color: var(--tsmc-primary);
+}
+
+.tsmc-diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--tsmc-mono);
+  font-size: 12px;
+}
+
+.tsmc-diff-table th,
+.tsmc-diff-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tsmc-diff-changed {
+  background: #fef9c3;
+  font-weight: 600;
+}
