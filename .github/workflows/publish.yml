@@ -32,14 +32,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build packages
+        run: pnpm build
+
       - name: Typecheck
         run: pnpm typecheck
 
       - name: Run tests
         run: pnpm test
-
-      - name: Build packages
-        run: pnpm build
 
       - name: Publish packages to npm
         run: pnpm -r --filter './packages/*' publish --access public --no-git-checks
