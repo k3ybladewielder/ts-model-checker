@@ -2,6 +2,8 @@
 
 A TLA+-style formal model checker in TypeScript with an eval-free AST evaluator, BFS state-space explorer, Tarjan SCC liveness checker, TLA+ transpiler, and a visual no-code React UI.
 
+![Template verification demo](./example.gif)
+
 ## Packages
 
 - `@ts-model-checker/core` — Pure formal engine (AST validator, evaluator, BFS model checker, liveness checker, trace validator, `.tla`/`.cfg` transpiler).
