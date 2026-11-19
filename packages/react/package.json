@@ -17,6 +17,14 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k3ybladewielder/ts-model-checker.git",
+    "directory": "packages/react"
+  },
   "scripts": {
     "build": "tsup && cp src/styles/theme.css dist/styles.css",
     "typecheck": "tsc --noEmit"
