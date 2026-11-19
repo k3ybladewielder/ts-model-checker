@@ -5,6 +5,7 @@ import {
   FilePlus2,
   Play,
   RotateCcw,
+  Save,
   Square,
   Upload,
   XCircle,
@@ -12,7 +13,9 @@ import {
 import {
   createBlankSpec,
   PRESET_CATALOG,
+  transpileToTla,
   type TraceStep,
+  type VerificationResult,
   type VisualSpecIR,
 } from "@ts-model-checker/core";
 import {
@@ -35,9 +38,53 @@ export function App() {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [showTlaModal, setShowTlaModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
 
   const { isRunning, progress, result, error, verify, cancel, reset } =
     useModelChecker(createCheckerWorker);
+
+  const saveModelLocally = async (
+    targetSpec: VisualSpecIR,
+    verificationResult?: VerificationResult | null
+  ) => {
+    let tla: { tlaFileContent: string; cfgFileContent: string } | null = null;
+    try {
+      tla = transpileToTla(targetSpec);
+    } catch {
+      tla = null;
+    }
+
+    try {
+      const res = await fetch("/__tsmc/save-model", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project: "playground",
+          spec: targetSpec,
+          result: verificationResult ?? undefined,
+          tla,
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { files: string[] };
+        setSaveNotice(`Saved locally: models/${data.files[0]}`);
+        return;
+      }
+    } catch {
+      // Fallback to browser download when Vite dev middleware is unavailable
+    }
+
+    const blob = new Blob([JSON.stringify(targetSpec, null, 2) + "\n"], {
+      type: "application/json;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${targetSpec.moduleName || "MySystem"}.formal.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setSaveNotice(`Downloaded ${targetSpec.moduleName}.formal.json`);
+  };
 
   const handleSelectPreset = (presetId: string) => {
     if (presetId === "__blank__") {
@@ -61,7 +108,8 @@ export function App() {
 
   const handleRunVerify = async () => {
     setActiveStepIndex(0);
-    await verify(spec, { maxStates: 50_000 });
+    const res = await verify(spec, { maxStates: 50_000 });
+    await saveModelLocally(spec, res);
   };
 
   const traceInfo = useMemo<{
@@ -173,6 +221,15 @@ export function App() {
             <Code2 size={15} /> Export TLA+ / JSON
           </button>
 
+          <button
+            type="button"
+            className="tsmc-btn"
+            onClick={() => void saveModelLocally(spec, result)}
+            title="Save model locally to models/playground/"
+          >
+            <Save size={15} /> Save Model
+          </button>
+
           {isRunning ? (
             <button
               type="button"
@@ -191,19 +248,26 @@ export function App() {
             </button>
           )}
 
-          {result && (
-            <button
-              type="button"
-              className="tsmc-btn"
-              onClick={() => {
-                setActiveStepIndex(0);
-                reset();
-              }}
-              title="Clear result"
-            >
-              <RotateCcw size={14} />
-            </button>
-          )}
+          <button
+            type="button"
+            className="tsmc-btn"
+            onClick={() => {
+              if (selectedPresetId === "__blank__") {
+                setSpec(createBlankSpec("MySystem"));
+              } else {
+                const found = PRESET_CATALOG.find(
+                  (p) => p.id === selectedPresetId
+                );
+                if (found) setSpec(found.spec);
+              }
+              setActiveStepIndex(0);
+              setSaveNotice(null);
+              reset();
+            }}
+            title="Reset template and clear result"
+          >
+            <RotateCcw size={14} /> Reset
+          </button>
         </div>
       </header>
 
@@ -236,6 +300,12 @@ export function App() {
             paddingRight: 2,
           }}
         >
+          {saveNotice && (
+            <div className="tsmc-panel" style={{ padding: "8px 12px" }}>
+              <span className="tsmc-badge tsmc-badge-info">{saveNotice}</span>
+            </div>
+          )}
+
           {/* Verification Status Card */}
           {isRunning && (
             <div className="tsmc-panel">
