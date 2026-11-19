@@ -7,5 +7,6 @@ export * from "./components/ExprBuilder";
 export * from "./components/PropertiesPanel";
 export * from "./components/TracePlayer";
 export * from "./components/TlaExportModal";
+export * from "./components/ImportModal";
 export * from "./hooks/useModelChecker";
 export * from "./utils/formatExpr";

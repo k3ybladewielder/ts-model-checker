@@ -6,6 +6,7 @@ import {
   Play,
   RotateCcw,
   Square,
+  Upload,
   XCircle,
 } from "lucide-react";
 import {
@@ -16,6 +17,7 @@ import {
 } from "@ts-model-checker/core";
 import {
   FormalCanvas,
+  ImportModal,
   PropertiesPanel,
   TlaExportModal,
   TracePlayer,
@@ -32,6 +34,7 @@ export function App() {
   const [spec, setSpec] = useState<VisualSpecIR>(PRESET_CATALOG[0].spec);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [showTlaModal, setShowTlaModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const { isRunning, progress, result, error, verify, cancel, reset } =
     useModelChecker(createCheckerWorker);
@@ -157,9 +160,17 @@ export function App() {
           <button
             type="button"
             className="tsmc-btn"
+            onClick={() => setShowImportModal(true)}
+          >
+            <Upload size={15} /> Import
+          </button>
+
+          <button
+            type="button"
+            className="tsmc-btn"
             onClick={() => setShowTlaModal(true)}
           >
-            <Code2 size={15} /> Export TLA+
+            <Code2 size={15} /> Export TLA+ / JSON
           </button>
 
           {isRunning ? (
@@ -294,6 +305,18 @@ export function App() {
 
       {showTlaModal && (
         <TlaExportModal spec={spec} onClose={() => setShowTlaModal(false)} />
+      )}
+
+      {showImportModal && (
+        <ImportModal
+          onImport={(importedSpec) => {
+            setSelectedPresetId("__blank__");
+            setSpec(importedSpec);
+            setActiveStepIndex(0);
+            reset();
+          }}
+          onClose={() => setShowImportModal(false)}
+        />
       )}
     </div>
   );
