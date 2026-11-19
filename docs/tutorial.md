@@ -31,8 +31,13 @@ Welcome to `ts-model-checker`, a visual TLA+-style formal model checker. You can
    - Click **Verify Model**. The BFS explorer runs in a background Web Worker.
    - If a bug is found (`INVARIANT_VIOLATED`, `DEADLOCK`, or `LIVENESS_VIOLATED`), the **TracePlayer** appears on the right. Use **Play**, **Next**, or **Previous** to watch the exact sequence of actions on the canvas and inspect variable diffs at every step.
 
-6. **Export to TLA+ (`.tla` / `.cfg`):**
-   - Click **Export TLA+** in the top bar to preview, copy, or download `.tla` and `.cfg` files ready for TLC.
+6. **Save, Import & Export (`.formal.json`, `.report.json`, `.tla` / `.cfg`):**
+   - Click **Save Model** (or **Verify Model**) to save locally into `models/<project>/` (git-ignored):
+     - **`<Model>.formal.json`** — The **model specification** (`VisualSpecIR`: initial state, guards, effects, invariants, liveness). Use **Import → JSON** to load this file back into the canvas.
+     - **`<Model>.report.json`** — The **verification result** (`VerificationResult`: `PASSED` / `INVARIANT_VIOLATED` / `DEADLOCK` / `LIVENESS_VIOLATED`, state counts, and the step-by-step counterexample).
+     - **`<Model>.tla` & `<Model>.cfg`** — The transpiled TLA+ module and TLC config.
+     - **`REPORT.md`** — A consolidated summary table (`Module | Model | Result | Key Finding`) when verifying multi-module projects.
+   - Click **Export TLA+ / JSON** in the top bar to preview, copy, or download `.tla`, `.cfg`, and `.json` files.
 
 ---
 

@@ -113,6 +113,15 @@ pnpm install
 pnpm dev
 ```
 
+## Saved Models & Output Files (`models/`)
+
+When you click **Save Model** or **Verify Model** in the playground (or run verification via the agent skill), outputs are saved locally in `models/<project>/` (git-ignored):
+
+- **`<Model>.formal.json`** — The **input specification** (`VisualSpecIR`: variables, actions, invariants, liveness). Import this file back into the visual studio (**Import → JSON**).
+- **`<Model>.report.json`** — The **verification output** (`VerificationResult`: status, explored states/transitions, and shortest counterexample trace).
+- **`<Model>.tla` / `<Model>.cfg`** — Transpiled TLA+ module and TLC configuration.
+- **`REPORT.md`** — Consolidated human-readable summary table (`Module | Model | Result | Key Finding`) across all models in a project.
+
 See [docs/tutorial.md](./docs/tutorial.md) for a step-by-step guide, built-in templates, and real-world use cases.
 
 ## Contributing
