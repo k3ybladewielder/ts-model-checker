@@ -7,4 +7,5 @@ export * from "./engine/livenessChecker";
 export * from "./engine/modelChecker";
 export * from "./engine/traceValidator";
 export * from "./transpiler/tlaGenerator";
+export * from "./transpiler/tlaParser";
 export * from "./presets";
